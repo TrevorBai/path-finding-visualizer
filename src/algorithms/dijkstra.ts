@@ -24,6 +24,7 @@ const dijkstra = (
     sortNodesByDistance(unvisitedNodes);
     const closestNode = unvisitedNodes.shift();
     // consider wall
+    if (closestNode && closestNode.isWall) continue;
 
     // If the closet node is at a distance of infinity,
     // we must be trapped and therefore should stop the loop.

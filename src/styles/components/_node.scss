@@ -16,3 +16,8 @@
 .node-visited {
   background-color: blue;
 }
+
+.node-wall {
+  background-color: #0c3547;
+  @include animation(wall, 1, 1.3);
+}

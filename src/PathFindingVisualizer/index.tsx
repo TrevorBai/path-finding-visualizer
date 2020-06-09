@@ -12,8 +12,7 @@ export class NodeAlgo {
   isFinish: boolean;
   distance: number;
   isVisited: boolean;
-  isVisitedClass?: boolean;
-  isWall: false;
+  isWall: boolean;
   previousNode: NodeAlgo | null;
 
   constructor(public row: number, public col: number) {
@@ -21,7 +20,6 @@ export class NodeAlgo {
     this.isFinish = row === FINISH_NODE_ROW && col === FINISH_NODE_COL;
     this.distance = Infinity;
     this.isVisited = false;
-    this.isVisitedClass = false;
     this.isWall = false;
     this.previousNode = null;
   }
@@ -29,11 +27,29 @@ export class NodeAlgo {
 
 const PathFindingVisualizer = () => {
   const [grid, setGrid] = useState<NodeAlgo[][]>([]);
+  const [mouseIsPressed, setMouseIsPressed] = useState(false);
 
   useEffect(() => {
     const grid = getInitialGrid();
     setGrid(grid);
   }, []);
+
+  const handleMouseDown = (row: number, col: number): void => {
+    const newGrid = getNewGridWithWallToggled(grid, row, col);
+    setGrid(newGrid);
+    setMouseIsPressed(true);
+  };
+
+  const handleMouseEnter = (row: number, col: number): void => {
+    if (!mouseIsPressed) return;
+    const newGrid = getNewGridWithWallToggled(grid, row, col);
+    setGrid(newGrid);
+  };
+
+  const handleMouseUp = (): void => {
+    setMouseIsPressed(false);
+    console.log('mouseUp :>> ');
+  };
 
   const visualizeDijkstra = () => {
     const startNode = grid[START_NODE_ROW][START_NODE_COL];
@@ -43,22 +59,21 @@ const PathFindingVisualizer = () => {
     // console.log('visitedNodesInOrder :>> ', visitedNodesInOrder);
 
     if (visitedNodesInOrder) {
-      for (let i = 0; i < visitedNodesInOrder.length; i++) {
+      for (let i = 1; i < visitedNodesInOrder.length - 1; i++) {
         setTimeout(() => {
           const node = visitedNodesInOrder[i];
-          const newGrid = grid.slice();
-          const newNode = {
-            ...node,
-            isVisitedClass: true,
-          };
-          newGrid[node.row][node.col] = newNode;
-          setGrid(newGrid);
+          const visitedNode = document.getElementById(
+            `node-${node.row}-${node.col}`
+          );
+          if (visitedNode) {
+            visitedNode.className = 'node node-visited';
+          }
         }, 20 * i);
       }
     }
   };
 
-  console.log('rerender');
+  console.log('mouseIsPressed', mouseIsPressed);
   return (
     <>
       <button onClick={visualizeDijkstra}>
@@ -68,13 +83,18 @@ const PathFindingVisualizer = () => {
         {grid.map((row, rowIdx) => (
           <div key={rowIdx}>
             {row.map((node, nodeIdx) => {
-              const { isStart, isFinish, isVisitedClass } = node;
+              const { row, col, isStart, isFinish, isWall } = node;
               return (
                 <Node
+                  row={row}
+                  col={col}
+                  isWall={isWall}
                   key={nodeIdx}
                   isStart={isStart}
                   isFinish={isFinish}
-                  isVisited={isVisitedClass as boolean}
+                  onMouseEnter={() => handleMouseEnter(row, col)}
+                  onMouseDown={() => handleMouseDown(row, col)}
+                  onMouseUp={() => handleMouseUp()}
                 />
               );
             })}
@@ -95,6 +115,21 @@ const getInitialGrid = (): NodeAlgo[][] => {
     grid.push(currentRow);
   }
   return grid;
+};
+
+const getNewGridWithWallToggled = (
+  grid: NodeAlgo[][],
+  row: number,
+  col: number
+): NodeAlgo[][] => {
+  const newGrid: NodeAlgo[][] = grid.slice();
+  const node = newGrid[row][col];
+  const newNode = {
+    ...node,
+    isWall: !node.isWall,
+  };
+  newGrid[row][col] = newNode;
+  return newGrid;
 };
 
 export default PathFindingVisualizer;

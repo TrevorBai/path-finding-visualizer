@@ -1,0 +1,28 @@
+@mixin animation($name, $scale-start, $scale-overshoot, $duration: 0.2s) {
+  animation: #{$name} #{$duration} ease-in-out 0s forwards;
+  -webkit-animation: #{$name} #{$duration} ease-in-out 0s forwards;
+
+  @keyframes wall {
+    0% {
+      transform: scale(#{$scale-start});
+      -webkit-transform: scale(#{$scale-start});
+      -moz-transform: scale(#{$scale-start});
+      -ms-transform: scale(#{$scale-start});
+      -o-transform: scale(#{$scale-start});
+    }
+    50% {
+      transform: scale(#{$scale-overshoot});
+      -webkit-transform: scale(#{$scale-overshoot});
+      -moz-transform: scale(#{$scale-overshoot});
+      -ms-transform: scale(#{$scale-overshoot});
+      -o-transform: scale(#{$scale-overshoot});
+    }
+    100% {
+      transform: scale(1);
+      -webkit-transform: scale(1);
+      -moz-transform: scale(1);
+      -ms-transform: scale(1);
+      -o-transform: scale(1);
+    }
+  }
+}
