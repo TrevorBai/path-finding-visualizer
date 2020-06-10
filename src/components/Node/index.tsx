@@ -6,6 +6,7 @@ export interface NodeProps {
   isFinish: boolean;
   isStart: boolean;
   isWall: boolean;
+  clearWall: boolean;
   onMouseDown: (row: number, col: number) => void;
   onMouseEnter: (row: number, col: number) => void;
   onMouseUp: () => void;
@@ -17,17 +18,17 @@ const Node: FC<NodeProps> = ({
   isFinish,
   isStart,
   isWall,
+  clearWall,
   onMouseDown,
   onMouseEnter,
   onMouseUp,
 }) => {
-  const extraClassName = isFinish
-    ? 'node-finish'
-    : isStart
-    ? 'node-start'
-    : isWall
-    ? 'node-wall'
-    : '';
+  let extraClassName = '';
+  if (isWall) extraClassName = extraClassName.concat('node-wall');
+  if (clearWall) extraClassName = '';
+
+  if (isFinish) extraClassName = extraClassName.concat('node-finish');
+  if (isStart) extraClassName = extraClassName.concat('node-start');
 
   return (
     <div

@@ -4,34 +4,21 @@ import {
   dijkstra,
   getNodesInShortestPathInOrder,
 } from '../algorithms/dijkstra';
+import Header from '../components/Header';
 
-const START_NODE_ROW = 10;
-const START_NODE_COL = 15;
-const FINISH_NODE_ROW = 10;
-const FINISH_NODE_COL = 35;
-
-export class NodeAlgo {
-  isStart: boolean;
-  isFinish: boolean;
-  distance: number;
-  isVisited: boolean;
-  isWall: boolean;
-  previousNode: NodeAlgo | null;
-
-  constructor(public row: number, public col: number) {
-    this.isStart = row === START_NODE_ROW && col === START_NODE_COL;
-    this.isFinish = row === FINISH_NODE_ROW && col === FINISH_NODE_COL;
-    this.distance = Infinity;
-    this.isVisited = false;
-    this.isWall = false;
-    this.previousNode = null;
-  }
-}
+import {
+  NodeAlgo,
+  START_NODE_ROW,
+  START_NODE_COL,
+  FINISH_NODE_ROW,
+  FINISH_NODE_COL,
+} from '../algorithms/dijkstra';
 
 const PathFindingVisualizer = () => {
   const [grid, setGrid] = useState<NodeAlgo[][]>([]);
   const [mouseIsPressed, setMouseIsPressed] = useState(false);
-  
+  const [clearWall, setClearWall] = useState(false);
+  let algoDone: boolean = false;
 
   useEffect(() => {
     const grid = getInitialGrid();
@@ -39,6 +26,7 @@ const PathFindingVisualizer = () => {
   }, []);
 
   const handleMouseDown = (row: number, col: number): void => {
+    setClearWall(false);
     const newGrid = getNewGridWithWallToggled(grid, row, col);
     setGrid(newGrid);
     setMouseIsPressed(true);
@@ -54,10 +42,7 @@ const PathFindingVisualizer = () => {
     setMouseIsPressed(false);
   };
 
-  let algoDone: boolean = false;
-  
   const visualizeDijkstra = () => {
-    console.log('algoDone before', algoDone);
     if (algoDone) return;
     const startNode = grid[START_NODE_ROW][START_NODE_COL];
     const finishNode = grid[FINISH_NODE_ROW][FINISH_NODE_COL];
@@ -74,7 +59,6 @@ const PathFindingVisualizer = () => {
             animateShortestPath(nodesInShortestPathInOrder);
           }, 10 * (i + 2));
           algoDone = true;
-          console.log('algoDone', algoDone);
           return;
         }
         const node = visitedNodesInOrder[i];
@@ -89,11 +73,9 @@ const PathFindingVisualizer = () => {
         }, 10 * i);
       }
     }
-    
   };
 
   const animateShortestPath = (nodesInShortestPathInOrder: NodeAlgo[]) => {
-    
     for (let i = 1; i < nodesInShortestPathInOrder.length - 1; i++) {
       const node = nodesInShortestPathInOrder[i];
       const visitedNode = document.getElementById(
@@ -106,14 +88,22 @@ const PathFindingVisualizer = () => {
         }
       }, 50 * i);
     }
-    
   };
-  // console.log('algoDone :>> ', algoDone);
+
+  const clearWallHandler = () => {
+    setClearWall(true);
+    const grid = getInitialGrid();
+    setGrid(grid);
+  };
+
+  console.log('rerender');
   return (
-    <div className="header">
-      <button onClick={visualizeDijkstra}>
-        Visualize Dijkstra's Algorithm
-      </button>
+    <div className="container">
+      <Header
+        visualizeDijkstra={visualizeDijkstra}
+        clearWall={clearWallHandler}
+        clearMap={() => {}}
+      />
       <div className="grid">
         {grid.map((row, rowIdx) => (
           <div key={rowIdx}>
@@ -130,6 +120,7 @@ const PathFindingVisualizer = () => {
                   onMouseEnter={() => handleMouseEnter(row, col)}
                   onMouseDown={() => handleMouseDown(row, col)}
                   onMouseUp={() => handleMouseUp()}
+                  clearWall={clearWall}
                 />
               );
             })}

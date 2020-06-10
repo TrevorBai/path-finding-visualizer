@@ -1,4 +1,25 @@
-import { NodeAlgo } from '../PathFindingVisualizer';
+export const START_NODE_ROW = 10;
+export const START_NODE_COL = 15;
+export const FINISH_NODE_ROW = 10;
+export const FINISH_NODE_COL = 35;
+
+export class NodeAlgo {
+  isStart: boolean;
+  isFinish: boolean;
+  distance: number;
+  isVisited: boolean;
+  isWall: boolean;
+  previousNode: NodeAlgo | null;
+
+  constructor(public row: number, public col: number) {
+    this.isStart = row === START_NODE_ROW && col === START_NODE_COL;
+    this.isFinish = row === FINISH_NODE_ROW && col === FINISH_NODE_COL;
+    this.distance = Infinity;
+    this.isVisited = false;
+    this.isWall = false;
+    this.previousNode = null;
+  }
+}
 
 const getAllNodes = (grid: NodeAlgo[][]): NodeAlgo[] => {
   const nodes: NodeAlgo[] = [];
