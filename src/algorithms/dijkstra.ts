@@ -62,4 +62,15 @@ const getUnvisitedNeighbors = (node: NodeAlgo, grid: NodeAlgo[][]): NodeAlgo[] =
   return neighbors.filter((neighbor) => neighbor.isVisited === false);
 };
 
-export { dijkstra };
+const getNodesInShortestPathInOrder = (finishNode: NodeAlgo) => {
+  const nodesInShortestPathInOrder: NodeAlgo[] = [];
+  let currentNode = finishNode;
+  while (currentNode) {
+    nodesInShortestPathInOrder.unshift(currentNode);
+    if (!currentNode.previousNode) break;
+    currentNode = currentNode.previousNode;
+  }
+  return nodesInShortestPathInOrder;
+};
+
+export { dijkstra, getNodesInShortestPathInOrder };

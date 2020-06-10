@@ -1,21 +1,36 @@
-@mixin animation($name, $scale-start, $scale-overshoot, $duration: 0.2s) {
+@mixin animation(
+  $name,
+  $scale-start,
+  $scale-overshoot,
+  $duration: 0.2s,
+  $bg-color-0: #0c3547,
+  $bg-color-50: #0c3547,
+  $bg-color-75: #0c3547,
+  $bg-color-100: #0c3547
+) {
   animation: #{$name} #{$duration} ease-in-out 0s forwards;
   -webkit-animation: #{$name} #{$duration} ease-in-out 0s forwards;
 
-  @keyframes wall {
+  @keyframes #{$name} {
     0% {
       transform: scale(#{$scale-start});
       -webkit-transform: scale(#{$scale-start});
       -moz-transform: scale(#{$scale-start});
       -ms-transform: scale(#{$scale-start});
       -o-transform: scale(#{$scale-start});
+      background-color: $bg-color-0;
+      border-radius: 100%;
     }
     50% {
+      background-color: $bg-color-50;
+    }
+    75% {
       transform: scale(#{$scale-overshoot});
       -webkit-transform: scale(#{$scale-overshoot});
       -moz-transform: scale(#{$scale-overshoot});
       -ms-transform: scale(#{$scale-overshoot});
       -o-transform: scale(#{$scale-overshoot});
+      background-color: $bg-color-75;
     }
     100% {
       transform: scale(1);
@@ -23,6 +38,7 @@
       -moz-transform: scale(1);
       -ms-transform: scale(1);
       -o-transform: scale(1);
+      background-color: $bg-color-100;
     }
   }
 }
