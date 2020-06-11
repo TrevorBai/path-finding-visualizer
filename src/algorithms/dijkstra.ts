@@ -49,8 +49,9 @@ const dijkstra = (
 
     // If the closet node is at a distance of infinity,
     // we must be trapped and therefore should stop the loop.
-    if (!closestNode || closestNode.distance === Infinity) return visitedNodesInOrder;
-    
+    if (!closestNode || closestNode.distance === Infinity)
+      return visitedNodesInOrder;
+
     closestNode.isVisited = true;
     visitedNodesInOrder.push(closestNode);
     if (closestNode === finishNode) return visitedNodesInOrder;

@@ -6,7 +6,8 @@
   $bg-color-0: #0c3547,
   $bg-color-50: #0c3547,
   $bg-color-75: #0c3547,
-  $bg-color-100: #0c3547
+  $bg-color-100: #0c3547,
+  $border-radius: 100%
 ) {
   animation: #{$name} #{$duration} ease-in-out 0s forwards;
   -webkit-animation: #{$name} #{$duration} ease-in-out 0s forwards;
@@ -19,8 +20,13 @@
       -ms-transform: scale(#{$scale-start});
       -o-transform: scale(#{$scale-start});
       background-color: $bg-color-0;
-      border-radius: 100%;
-    }
+      
+      border-radius: #{$border-radius};
+      -webkit-border-radius: #{$border-radius};
+      -moz-border-radius: #{$border-radius};
+      -ms-border-radius: #{$border-radius};
+      -o-border-radius: #{$border-radius};
+}
     50% {
       background-color: $bg-color-50;
     }

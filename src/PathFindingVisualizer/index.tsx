@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, ChangeEvent } from 'react';
 import Node from '../components/Node';
 import {
   dijkstra,
@@ -19,6 +19,7 @@ const PathFindingVisualizer = () => {
   const [mouseIsPressed, setMouseIsPressed] = useState(false);
   const [clearWall, setClearWall] = useState(false);
   let algoDone: boolean = false;
+  let animationSpeed: number = 11;
 
   useEffect(() => {
     const grid = getInitialGrid();
@@ -42,22 +43,24 @@ const PathFindingVisualizer = () => {
     setMouseIsPressed(false);
   };
 
+  let visitedNodesInOrder: NodeAlgo[] = [];
+
   const visualizeDijkstra = () => {
     if (algoDone) return;
     const startNode = grid[START_NODE_ROW][START_NODE_COL];
     const finishNode = grid[FINISH_NODE_ROW][FINISH_NODE_COL];
 
-    const visitedNodesInOrder = dijkstra(grid, startNode, finishNode);
+    visitedNodesInOrder = dijkstra(grid, startNode, finishNode) as NodeAlgo[];
     const nodesInShortestPathInOrder = getNodesInShortestPathInOrder(
       finishNode
     );
 
     if (visitedNodesInOrder) {
-      for (let i = 1; i < visitedNodesInOrder.length - 1; i++) {
-        if (i === visitedNodesInOrder.length - 2) {
+      for (let i = 1; i < visitedNodesInOrder.length; i++) {
+        if (i === visitedNodesInOrder.length - 1) {
           setTimeout(() => {
             animateShortestPath(nodesInShortestPathInOrder);
-          }, 10 * (i + 2));
+          }, 10 * (i + 2) * animationSpeed);
           algoDone = true;
           return;
         }
@@ -70,7 +73,7 @@ const PathFindingVisualizer = () => {
           if (visitedNode) {
             visitedNode.className = 'node node-visited';
           }
-        }, 10 * i);
+        }, (10 * i) * animationSpeed);
       }
     }
   };
@@ -86,7 +89,7 @@ const PathFindingVisualizer = () => {
         if (visitedNode) {
           visitedNode.className = 'node node-shortest-path';
         }
-      }, 50 * i);
+      }, 50 * i * animationSpeed);
     }
   };
 
@@ -96,13 +99,33 @@ const PathFindingVisualizer = () => {
     setGrid(grid);
   };
 
+  const clearMapHandler = () => {
+    for (let i = 1; i < visitedNodesInOrder.length - 1; i++) {
+      const node = visitedNodesInOrder[i];
+      const visitedNode = document.getElementById(
+        `node-${node.row}-${node.col}`
+      );
+      if (visitedNode) {
+        visitedNode.className = 'node';
+      }
+    }
+    algoDone = false;
+  };
+
+  const sliderChangeHandler = (e: ChangeEvent<HTMLInputElement>) => {
+    let speedScale = Number(e.target.value);
+    console.log(e.target.value);
+    animationSpeed = 51 - 10 * speedScale;
+  };
+  
   console.log('rerender');
   return (
     <div className="container">
       <Header
         visualizeDijkstra={visualizeDijkstra}
         clearWall={clearWallHandler}
-        clearMap={() => {}}
+        clearMap={clearMapHandler}
+        sliderChange={sliderChangeHandler}
       />
       <div className="grid">
         {grid.map((row, rowIdx) => (
