@@ -1,30 +1,64 @@
-import React, { useState, useEffect, ChangeEvent } from 'react';
+import React, { useState, useEffect, ChangeEvent, useCallback } from 'react';
 import Node from '../components/Node';
 import {
   dijkstra,
   getNodesInShortestPathInOrder,
 } from '../algorithms/dijkstra';
 import Header from '../components/Header';
+import Draggable, {
+  DraggableData,
+  DraggableEventHandler,
+} from 'react-draggable';
 
-import {
-  NodeAlgo,
-  START_NODE_ROW,
-  START_NODE_COL,
-  FINISH_NODE_ROW,
-  FINISH_NODE_COL,
-} from '../algorithms/dijkstra';
+import { NodeAlgo } from '../algorithms/dijkstra';
+
+const START_NODE_ROW = 10;
+const START_NODE_COL = 15;
+const FINISH_NODE_ROW = 10;
+const FINISH_NODE_COL = 35;
+
+export interface NodePos {
+  row: number;
+  col: number;
+}
 
 const PathFindingVisualizer = () => {
   const [grid, setGrid] = useState<NodeAlgo[][]>([]);
   const [mouseIsPressed, setMouseIsPressed] = useState(false);
   const [clearWall, setClearWall] = useState(false);
+  const [animationSpeed, setAnimationSpeed] = useState(11);
+  const [deltaPositionStart, setDeltaPositionStart] = useState({ x: 0, y: 0 });
+  const [deltaPositionFinish, setDeltaPositionFinish] = useState({
+    x: 0,
+    y: 0,
+  });
+  const [startNode, setStartNode] = useState<NodePos>({
+    row: START_NODE_ROW,
+    col: START_NODE_COL,
+  });
+  const [finishNode, setFinishNode] = useState<NodePos>({
+    row: FINISH_NODE_ROW,
+    col: FINISH_NODE_COL,
+  });
+
   let algoDone: boolean = false;
-  let animationSpeed: number = 11;
+
+  const getInitialGrid = useCallback((): NodeAlgo[][] => {
+    const grid: NodeAlgo[][] = [];
+    for (let row = 0; row < 20; row++) {
+      const currentRow: NodeAlgo[] = [];
+      for (let col = 0; col < 50; col++) {
+        currentRow.push(new NodeAlgo(row, col, startNode, finishNode));
+      }
+      grid.push(currentRow);
+    }
+    return grid;
+  }, [startNode, finishNode]);
 
   useEffect(() => {
     const grid = getInitialGrid();
     setGrid(grid);
-  }, []);
+  }, [getInitialGrid, startNode, finishNode]);
 
   const handleMouseDown = (row: number, col: number): void => {
     setClearWall(false);
@@ -47,12 +81,16 @@ const PathFindingVisualizer = () => {
 
   const visualizeDijkstra = () => {
     if (algoDone) return;
-    const startNode = grid[START_NODE_ROW][START_NODE_COL];
-    const finishNode = grid[FINISH_NODE_ROW][FINISH_NODE_COL];
+    const startNodeAlgo = grid[startNode.row][startNode.col];
+    const finishNodeAlgo = grid[finishNode.row][finishNode.col];
 
-    visitedNodesInOrder = dijkstra(grid, startNode, finishNode) as NodeAlgo[];
+    visitedNodesInOrder = dijkstra(
+      grid,
+      startNodeAlgo,
+      finishNodeAlgo
+    ) as NodeAlgo[];
     const nodesInShortestPathInOrder = getNodesInShortestPathInOrder(
-      finishNode
+      finishNodeAlgo
     );
 
     if (visitedNodesInOrder) {
@@ -73,7 +111,7 @@ const PathFindingVisualizer = () => {
           if (visitedNode) {
             visitedNode.className = 'node node-visited';
           }
-        }, (10 * i) * animationSpeed);
+        }, 10 * i * animationSpeed);
       }
     }
   };
@@ -114,10 +152,37 @@ const PathFindingVisualizer = () => {
 
   const sliderChangeHandler = (e: ChangeEvent<HTMLInputElement>) => {
     let speedScale = Number(e.target.value);
-    console.log(e.target.value);
-    animationSpeed = 51 - 10 * speedScale;
+    setAnimationSpeed(51 - 10 * speedScale);
   };
-  
+
+  const handleStopStartNode = () => {
+    setStartNode({
+      row: START_NODE_ROW + deltaPositionStart.y / 24,
+      col: START_NODE_COL + deltaPositionStart.x / 24,
+    });
+  };
+
+  const handleStopFinishNode = () => {
+    setFinishNode({
+      row: FINISH_NODE_ROW + deltaPositionFinish.y / 24,
+      col: FINISH_NODE_COL + deltaPositionFinish.x / 24,
+    });
+  };
+
+  const handleDragStartNode = (e: Event, ui: DraggableData) => {
+    setDeltaPositionStart({
+      x: deltaPositionStart.x + ui.deltaX,
+      y: deltaPositionStart.y + ui.deltaY,
+    });
+  };
+
+  const handleDragFinishNode = (e: Event, ui: DraggableData) => {
+    setDeltaPositionFinish({
+      x: deltaPositionFinish.x + ui.deltaX,
+      y: deltaPositionFinish.y + ui.deltaY,
+    });
+  };
+
   console.log('rerender');
   return (
     <div className="container">
@@ -132,7 +197,31 @@ const PathFindingVisualizer = () => {
           <div key={rowIdx}>
             {row.map((node, nodeIdx) => {
               const { row, col, isStart, isFinish, isWall } = node;
-              return (
+              return isStart ? (
+                <Draggable
+                  grid={[24, 24]}
+                  key={nodeIdx}
+                  onStop={handleStopStartNode}
+                  onDrag={handleDragStartNode as DraggableEventHandler}
+                >
+                  <div
+                    id={`node-${row}-${col}`}
+                    className="node node-start"
+                  ></div>
+                </Draggable>
+              ) : isFinish ? (
+                <Draggable
+                  grid={[24, 24]}
+                  key={nodeIdx}
+                  onStop={handleStopFinishNode}
+                  onDrag={handleDragFinishNode as DraggableEventHandler}
+                >
+                  <div
+                    id={`node-${row}-${col}`}
+                    className="node node-finish"
+                  ></div>
+                </Draggable>
+              ) : (
                 <Node
                   row={row}
                   col={col}
@@ -152,18 +241,6 @@ const PathFindingVisualizer = () => {
       </div>
     </div>
   );
-};
-
-const getInitialGrid = (): NodeAlgo[][] => {
-  const grid: NodeAlgo[][] = [];
-  for (let row = 0; row < 20; row++) {
-    const currentRow: NodeAlgo[] = [];
-    for (let col = 0; col < 50; col++) {
-      currentRow.push(new NodeAlgo(row, col));
-    }
-    grid.push(currentRow);
-  }
-  return grid;
 };
 
 const getNewGridWithWallToggled = (

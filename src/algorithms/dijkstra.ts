@@ -1,7 +1,4 @@
-export const START_NODE_ROW = 10;
-export const START_NODE_COL = 15;
-export const FINISH_NODE_ROW = 10;
-export const FINISH_NODE_COL = 35;
+import { NodePos } from '../PathFindingVisualizer';
 
 export class NodeAlgo {
   isStart: boolean;
@@ -11,9 +8,9 @@ export class NodeAlgo {
   isWall: boolean;
   previousNode: NodeAlgo | null;
 
-  constructor(public row: number, public col: number) {
-    this.isStart = row === START_NODE_ROW && col === START_NODE_COL;
-    this.isFinish = row === FINISH_NODE_ROW && col === FINISH_NODE_COL;
+  constructor(public row: number, public col: number, public startNode: NodePos, public finishNode: NodePos ) {
+    this.isStart = row === startNode.row && col === startNode.col;
+    this.isFinish = row === finishNode.row && col === finishNode.col;
     this.distance = Infinity;
     this.isVisited = false;
     this.isWall = false;
