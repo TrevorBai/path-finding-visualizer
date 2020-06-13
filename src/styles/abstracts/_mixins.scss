@@ -3,10 +3,10 @@
   $scale-start,
   $scale-overshoot,
   $duration: 0.2s,
-  $bg-color-0: #0c3547,
-  $bg-color-50: #0c3547,
-  $bg-color-75: #0c3547,
-  $bg-color-100: #0c3547,
+  $bg-color-0: $wall-color,
+  $bg-color-50: $bg-color-0,
+  $bg-color-75: $bg-color-0,
+  $bg-color-100: $bg-color-0,
   $border-radius: 100%
 ) {
   animation: #{$name} #{$duration} ease-in-out 0s forwards;

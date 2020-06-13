@@ -9,7 +9,7 @@ import Draggable, {
   DraggableData,
   DraggableEventHandler,
 } from 'react-draggable';
-
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { NodeAlgo } from '../algorithms/dijkstra';
 
 const START_NODE_ROW = 10;
@@ -94,8 +94,8 @@ const PathFindingVisualizer = () => {
     );
 
     if (visitedNodesInOrder) {
-      for (let i = 1; i < visitedNodesInOrder.length; i++) {
-        if (i === visitedNodesInOrder.length - 1) {
+      for (let i = 0; i <= visitedNodesInOrder.length; i++) {
+        if (i === visitedNodesInOrder.length) {
           setTimeout(() => {
             animateShortestPath(nodesInShortestPathInOrder);
           }, 10 * (i + 2) * animationSpeed);
@@ -117,7 +117,7 @@ const PathFindingVisualizer = () => {
   };
 
   const animateShortestPath = (nodesInShortestPathInOrder: NodeAlgo[]) => {
-    for (let i = 1; i < nodesInShortestPathInOrder.length - 1; i++) {
+    for (let i = 0; i < nodesInShortestPathInOrder.length; i++) {
       const node = nodesInShortestPathInOrder[i];
       const visitedNode = document.getElementById(
         `node-${node.row}-${node.col}`
@@ -138,7 +138,7 @@ const PathFindingVisualizer = () => {
   };
 
   const clearMapHandler = () => {
-    for (let i = 1; i < visitedNodesInOrder.length - 1; i++) {
+    for (let i = 0; i < visitedNodesInOrder.length; i++) {
       const node = visitedNodesInOrder[i];
       const visitedNode = document.getElementById(
         `node-${node.row}-${node.col}`
@@ -204,10 +204,13 @@ const PathFindingVisualizer = () => {
                   onStop={handleStopStartNode}
                   onDrag={handleDragStartNode as DraggableEventHandler}
                 >
-                  <div
-                    id={`node-${row}-${col}`}
-                    className="node node-start"
-                  ></div>
+                  <div id={`node-${row}-${col}`} className="node">
+                    <FontAwesomeIcon
+                      icon="paper-plane"
+                      size="lg"
+                      className="node-start"
+                    />
+                  </div>
                 </Draggable>
               ) : isFinish ? (
                 <Draggable
@@ -216,10 +219,13 @@ const PathFindingVisualizer = () => {
                   onStop={handleStopFinishNode}
                   onDrag={handleDragFinishNode as DraggableEventHandler}
                 >
-                  <div
-                    id={`node-${row}-${col}`}
-                    className="node node-finish"
-                  ></div>
+                  <div id={`node-${row}-${col}`} className="node">
+                    <FontAwesomeIcon
+                      icon="flag-checkered"
+                      size="lg"
+                      className="node-finish"
+                    />
+                  </div>
                 </Draggable>
               ) : (
                 <Node
@@ -227,8 +233,6 @@ const PathFindingVisualizer = () => {
                   col={col}
                   isWall={isWall}
                   key={nodeIdx}
-                  isStart={isStart}
-                  isFinish={isFinish}
                   onMouseEnter={() => handleMouseEnter(row, col)}
                   onMouseDown={() => handleMouseDown(row, col)}
                   onMouseUp={() => handleMouseUp()}

@@ -1,12 +1,12 @@
 .header {
   display: flex;
-  background-color: purple;
+  background-color: $header-background;
   justify-content: center;
   margin-bottom: 3rem;
 
   h1 {
     margin: auto;
-    color: rgb(236, 236, 236);
+    color: $header-text;
   }
 
   .animation-speed {
@@ -15,7 +15,7 @@
     padding-bottom: 0.2rem;
 
     label {
-      color: rgb(236, 236, 236);
+      color: $header-text;
       font-size: 1rem;
       font-weight: bold;
       margin-right: 2rem;
@@ -24,9 +24,9 @@
 
   button:nth-child(2) {
     border: none;
-    background-color: magenta;
+    background-color: $button-background;
     padding: 1rem;
-    color: rgb(236, 236, 236);
+    color: $header-text;
     font-size: 1rem;
     font-weight: bold;
     border-radius: 5px;
@@ -38,19 +38,19 @@
 
     &:focus {
       outline: none;
-      background-color: red;
+      background-color: $button-focus;
     }
 
     &:hover {
-      background-color: darken($color: magenta, $amount: 10%);
-      color: rgb(236, 236, 236);
+      background-color: darken($color: $button-background, $amount: 10%);
+      color: $header-text;
     }
   }
 
   button {
     border: none;
     background-color: inherit;
-    color: rgb(236, 236, 236);
+    color: $header-text;
     font-size: 1rem;
     font-weight: bold;
 
@@ -59,7 +59,7 @@
     }
 
     &:hover {
-      color: lighten($color: magenta, $amount: 10%);
+      color: lighten($color: $button-background, $amount: 10%);
     }
   }
 }
