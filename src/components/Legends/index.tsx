@@ -24,6 +24,11 @@ const Legends = () => {
     },
     {
       fontIcon: false,
+      label: 'Node being visited',
+      iconClassName: 'being-visited-node',
+    },
+    {
+      fontIcon: false,
       label: 'Visited Node',
       iconClassName: 'visited-node',
     },

@@ -34,6 +34,10 @@
     );
   }
 
+  &-visiting {
+    background-color: $being-visited-node-color;
+  }
+
   &-visited {
     @include animation(
       visited-node,
@@ -53,6 +57,6 @@
 
   &-shortest-path {
     background-color: $path-color;
-    @include animation(shortest-path, 1, 1.3, $path-color);
+    @include animation(shortest-path, 1, 1.3, 1s, $bg-color-0: $path-color);
   }
 }

@@ -64,6 +64,13 @@
     border: 0.5px solid $node-border-color;
   }
 
+  .being-visited-node {
+    width: 24px;
+    height: 24px;
+    background-color: $being-visited-node-color;
+    border: 0.5px solid $node-border-color;
+  }
+
   .visited-node {
     width: 24px;
     height: 24px;

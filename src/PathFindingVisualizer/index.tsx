@@ -1,4 +1,4 @@
-import React, { useState, useEffect, ChangeEvent, useCallback } from 'react';
+import React, { useState, useEffect, ChangeEvent, useCallback, FC } from 'react';
 import Node from '../components/Node';
 import {
   dijkstra,
@@ -13,17 +13,17 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { NodeAlgo } from '../algorithms/dijkstra';
 import Legends from '../components/Legends';
 
-const START_NODE_ROW = 10;
+const START_NODE_ROW = 15;
 const START_NODE_COL = 15;
-const FINISH_NODE_ROW = 10;
-const FINISH_NODE_COL = 35;
+const FINISH_NODE_ROW = 15;
+const FINISH_NODE_COL = 55;
 
 export interface NodePos {
   row: number;
   col: number;
 }
 
-const PathFindingVisualizer = () => {
+const PathFindingVisualizer: FC = () => {
   const [grid, setGrid] = useState<NodeAlgo[][]>([]);
   const [mouseIsPressed, setMouseIsPressed] = useState(false);
   const [clearWall, setClearWall] = useState(false);
@@ -46,9 +46,9 @@ const PathFindingVisualizer = () => {
 
   const getInitialGrid = useCallback((): NodeAlgo[][] => {
     const grid: NodeAlgo[][] = [];
-    for (let row = 0; row < 20; row++) {
+    for (let row = 0; row < 31; row++) {
       const currentRow: NodeAlgo[] = [];
-      for (let col = 0; col < 50; col++) {
+      for (let col = 0; col < 71; col++) {
         currentRow.push(new NodeAlgo(row, col, startNode, finishNode));
       }
       grid.push(currentRow);
@@ -103,12 +103,24 @@ const PathFindingVisualizer = () => {
           algoDone = true;
           return;
         }
+        // Visiting node will be one node ahead of visited node
         const node = visitedNodesInOrder[i];
+        const visitingNode = visitedNodesInOrder[i + 1];
+
         const visitedNode = document.getElementById(
           `node-${node.row}-${node.col}`
         );
+        let visitingNodeElement: HTMLElement | null;
+        if (visitingNode) {
+          visitingNodeElement = document.getElementById(
+            `node-${visitingNode.row}-${visitingNode.col}`
+          );
+        }
 
         setTimeout(() => {
+          if (visitingNodeElement) {
+            visitingNodeElement.className = 'node node-visiting';
+          }
           if (visitedNode) {
             visitedNode.className = 'node node-visited';
           }
@@ -184,7 +196,6 @@ const PathFindingVisualizer = () => {
     });
   };
 
-  console.log('rerender');
   return (
     <div className="container">
       <Header
