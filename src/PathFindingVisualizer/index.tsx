@@ -11,6 +11,7 @@ import Draggable, {
 } from 'react-draggable';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { NodeAlgo } from '../algorithms/dijkstra';
+import Legends from '../components/Legends';
 
 const START_NODE_ROW = 10;
 const START_NODE_COL = 15;
@@ -192,6 +193,7 @@ const PathFindingVisualizer = () => {
         clearMap={clearMapHandler}
         sliderChange={sliderChangeHandler}
       />
+      <Legends />
       <div className="grid">
         {grid.map((row, rowIdx) => (
           <div key={rowIdx}>

@@ -1,0 +1,87 @@
+.legends {
+  display: flex;
+  margin-bottom: 3rem;
+  justify-content: space-evenly;
+
+  & > div {
+    display: flex;
+    align-items: center;
+
+    label {
+      padding-left: 1rem;
+    }
+  }
+
+  .draggable-icon {
+    position: relative;
+
+    &-finish-node {
+      .triangle-down {
+        left: 0.4rem !important;
+      }
+    }
+
+    &-wall-node {
+      p {
+        left: -35rem !important;
+      }
+
+      .triangle-down {
+        left: 0.3rem !important;
+      }
+    }
+
+    p {
+      display: none;
+    }
+
+    &:hover {
+      p {
+        display: block;
+        position: absolute;
+        white-space: nowrap;
+        left: 0;
+        top: -2.8rem;
+        background-color: $header-text;
+        padding: 0.5rem;
+        @include border();
+      }
+
+      .triangle-down {
+        position: absolute;
+        top: -0.6rem;
+        left: 0.7rem;
+        border-left: 8px solid transparent;
+        border-right: 8px solid transparent;
+        border-top: 8px solid $header-text;
+      }
+    }
+  }
+
+  .unvisited-node {
+    width: 24px;
+    height: 24px;
+    border: 0.5px solid $node-border-color;
+  }
+
+  .visited-node {
+    width: 24px;
+    height: 24px;
+    background-color: $visited-node-color;
+    border: 0.5px solid $node-border-color;
+  }
+
+  .shortest-path-node {
+    width: 24px;
+    height: 24px;
+    background-color: $path-color;
+    border: 0.5px solid $node-border-color;
+  }
+
+  .wall-node {
+    width: 24px;
+    height: 24px;
+    background-color: $wall-color;
+    border: 0.5px solid $node-border-color;
+  }
+}

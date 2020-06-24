@@ -2,7 +2,7 @@
   display: flex;
   background-color: $header-background;
   justify-content: center;
-  margin-bottom: 3rem;
+  margin-bottom: 2rem;
 
   h1 {
     margin: auto;
@@ -29,11 +29,7 @@
     color: $header-text;
     font-size: 1rem;
     font-weight: bold;
-    border-radius: 5px;
-    -webkit-border-radius: 5px;
-    -moz-border-radius: 5px;
-    -ms-border-radius: 5px;
-    -o-border-radius: 5px;
+    @include border();
     cursor: pointer;
 
     &:focus {
