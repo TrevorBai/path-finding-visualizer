@@ -1,0 +1,38 @@
+.tutorial {
+  z-index: 100;
+  position: absolute;
+  width: 700px;
+
+  h1 {
+    margin-bottom: 2rem;
+    text-align: center;
+  }
+
+  padding: 3rem;
+  border: 3px solid rgb(78, 39, 39);
+  background: white;
+  @include border();
+
+  top: 150px;
+  left: 600px;
+
+  img {
+    display: block;
+    margin: auto;
+    width: 300px;
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+  }
+
+  .button-row {
+    display: flex;
+    justify-content: space-between;
+
+    button {
+      background: cyan;
+      @include border();
+      padding: 1rem;
+      cursor: pointer;
+    }
+  }
+}
